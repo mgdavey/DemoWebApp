@@ -18,6 +18,7 @@ namespace DemoSvc
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            
         }
 
         public IConfiguration Configuration { get; }
@@ -29,7 +30,7 @@ namespace DemoSvc
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApplicationLifetime applicationLifetime)
         {
             if (env.IsDevelopment())
             {
@@ -40,6 +41,16 @@ namespace DemoSvc
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+
+            applicationLifetime.ApplicationStopping.Register(() => 
+            {
+                Console.WriteLine("ApplicationStopping called. Sleeping for 60 seconds");
+                System.Threading.Thread.Sleep(60000);
+            });
+            applicationLifetime.ApplicationStopped.Register(() => Console.WriteLine("ApplicationStopped called"));
+
+
 
             app.UseHttpsRedirection();
             app.UseMvc();
