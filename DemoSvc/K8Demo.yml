@@ -1,0 +1,26 @@
+﻿apiVersion: v1
+kind: Pod
+metadata:
+ name: simple-api
+ labels:
+   app: SIMPLE_API_APP
+spec:
+ containers:
+ - name: simple-api-container
+   image: demo-websvc
+   imagePullPolicy: Never
+   ports:
+    - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+ name: simple-api-load-balancer
+spec:
+ ports:
+ - port: 4500
+   targetPort: 80
+   name: http
+ type: LoadBalancer
+ selector:
+   app: SIMPLE_API_APP
